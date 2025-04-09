@@ -12,18 +12,18 @@ import { Testimonials } from "@/components/landing/testimonials";
 import { UseCases } from "@/components/landing/use-cases";
 
 export default function Home() {
-  return (
-    <div className="min-h-screen bg-background">
-      <Header />
-      <Hero />
-      <Features />
-      <Examples />
-      <UseCases />
-      <Testimonials />
-      <Pricing />
-      <FAQ />
-      <CTA />
-      <Footer />
-    </div>
-  );
+	return (
+		<div className="min-h-screen bg-background">
+			<Header />
+			<Hero />
+			<Features />
+			<Examples />
+			<UseCases />
+			<Testimonials />
+			<Pricing />
+			<FAQ />
+			<CTA />
+			<Footer />
+		</div>
+	);
 }

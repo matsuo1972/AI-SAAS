@@ -1,44 +1,47 @@
-'use client'
+"use client";
 
 import { Button } from "@/components/ui/button";
 import { User } from "@prisma/client";
 import { useRouter } from "next/navigation";
-import React from "react";
-
 
 interface SettingsFormProps {
-    user: User;
+	user: User;
 }
 
 export function SubscriptionSettingsForm({ user }: SettingsFormProps) {
-    const router = useRouter();
-    const handleManageSubscription = async () => {
+	const router = useRouter();
+	const handleManageSubscription = async () => {
+		try {
+			const response = await fetch("/api/create-portal-session", {
+				method: "POST",
+			});
+			const data = await response.json();
 
-        try {
-            const response = await fetch("/api/create-portal-session", { method: "POST" });
-            const data = await response.json();
-            console.log('data = ', data);
-            router.push(data.url);
-        } catch (err) {
-            console.error('Error: ', err);
-        }
-    }
-    return (
-        <div className="grid gap-4 p-4 border-2 rounded-lg">
-            <div className="grid gap-2">
-                {user?.subscriptionState !== 'FREE' ? (
-                    <>
-                        <p className="text-sm text-muted-foreground">現在のサブスクリプションを管理します</p>
-                        <Button onClick={handleManageSubscription} >サブスクリプション管理</Button>
-                    </>
-                ) : (
-                    <>
-                        <p className="text-sm text-muted-foreground">
-                            まだサブスクリプションに登録していません
-                        </p>
-                    </>
-                )}
-            </div>
-        </div>
-    )
+			router.push(data.url);
+		} catch (err) {
+			console.error("Error: ", err);
+		}
+	};
+	return (
+		<div className="grid gap-4 p-4 border-2 rounded-lg">
+			<div className="grid gap-2">
+				{user?.subscriptionState !== "FREE" ? (
+					<>
+						<p className="text-sm text-muted-foreground">
+							現在のサブスクリプションを管理します
+						</p>
+						<Button onClick={handleManageSubscription}>
+							サブスクリプション管理
+						</Button>
+					</>
+				) : (
+					<>
+						<p className="text-sm text-muted-foreground">
+							まだサブスクリプションに登録していません
+						</p>
+					</>
+				)}
+			</div>
+		</div>
+	);
 }

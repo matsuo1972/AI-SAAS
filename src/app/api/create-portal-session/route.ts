@@ -4,29 +4,35 @@ import { currentUser } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 
 export async function POST() {
-    try {
-        const user = await currentUser();
+	try {
+		const user = await currentUser();
 
-        if (!user) {
-            return NextResponse.json({ error: "Unauthorized Error"}, { status: 401 })
-        }
+		if (!user) {
+			return NextResponse.json(
+				{ error: "Unauthorized Error" },
+				{ status: 401 }
+			);
+		}
 
-        // DBからStripeユーザーIDを取り出す
-        const dbUser = await prisma.user.findUnique({
-            where: { clerkId: user.id }
-        });
-        
-        if (!dbUser || !dbUser.stripeCustomerId) {
-            return NextResponse.json({ error: "No Stripe customer id "}, { status: 400 } )
-        }
-        const session = await stripe.billingPortal.sessions.create({
-            customer: dbUser?.stripeCustomerId,
-            return_url: `${process.env.BASE_URL}/dashboard/settings`
-        });
+		// DBからStripeユーザーIDを取り出す
+		const dbUser = await prisma.user.findUnique({
+			where: { clerkId: user.id },
+		});
 
-        return NextResponse.json({ url: session.url });
-    } catch (error) {
-        console.log("Error: ", error);
-        return NextResponse.json({ error: "Internal Error"}, { status: 500 })
-    }
+		if (!dbUser || !dbUser.stripeCustomerId) {
+			return NextResponse.json(
+				{ error: "No Stripe customer id " },
+				{ status: 400 }
+			);
+		}
+		const session = await stripe.billingPortal.sessions.create({
+			customer: dbUser?.stripeCustomerId,
+			return_url: `${process.env.BASE_URL}/dashboard/settings`,
+		});
+
+		return NextResponse.json({ url: session.url });
+	} catch (error) {
+		console.error("Error: ", error);
+		return NextResponse.json({ error: "Internal Error" }, { status: 500 });
+	}
 }
