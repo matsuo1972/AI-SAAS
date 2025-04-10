@@ -10,7 +10,7 @@ export function Header() {
 			<div className="container mx-auto px-4 h-16 flex items-center justify-between">
 				<div className="flex items-center space-x-2">
 					<Sparkles className="h-6 w-6 text-primary" />
-					<span className="text-xl font-bold">AImagine</span>
+					<span className="text-xl font-bold">AIStation</span>
 				</div>
 				<nav className="hidden md:flex items-center space-x-6">
 					<a
@@ -31,8 +31,8 @@ export function Header() {
 					>
 						料金プラン
 					</a>
-					<Button variant="default">
-						<Link href={"/dashboard"}>無料で始める</Link>
+					<Button variant="default" asChild>
+						<Link href="/dashboard">無料で始める</Link>
 					</Button>
 				</nav>
 				<Button variant="outline" size="icon" className="md:hidden">

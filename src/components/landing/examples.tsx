@@ -8,21 +8,20 @@ export function Examples() {
 		{
 			before: "https://images.unsplash.com/photo-1600880292203-757bb62b4baf?auto=format&fit=crop&q=80",
 			after: "https://images.unsplash.com/photo-1600880292089-90a6a0a4c3d1?auto=format&fit=crop&q=80",
-			title: "商品画像の背景除去",
-			description:
-				"商品写真から背景を自動で除去し、プロフェッショナルな仕上がりに",
-		},
-		{
-			before: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&q=80",
-			after: "https://images.unsplash.com/photo-1606107557195-0e29a4b5b4aa?auto=format&fit=crop&q=80",
-			title: "画像生成",
+			title: "AI画像生成",
 			description: "テキストプロンプトから希望のイメージを生成",
 		},
 		{
-			before: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&q=80",
-			after: "https://images.unsplash.com/photo-1484704849700-f032a568e944?auto=format&fit=crop&q=80",
-			title: "画像加工",
-			description: "色調補正やフィルター適用で魅力的な仕上がりに",
+			before: "https://images.unsplash.com/photo-1511379938547-c1f69419868d?auto=format&fit=crop&q=80",
+			after: "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?auto=format&fit=crop&q=80",
+			title: "音楽生成",
+			description: "テキストプロンプトからオリジナル楽曲を生成",
+		},
+		{
+			before: "https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?auto=format&fit=crop&q=80",
+			after: "https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?auto=format&fit=crop&q=80&blend=000000&blend-alpha=0",
+			title: "AI背景除去",
+			description: "画像から背景を自動で除去し、透明化",
 		},
 	];
 
@@ -30,7 +29,7 @@ export function Examples() {
 		<section className="py-16">
 			<div className="container mx-auto px-4">
 				<h2 className="text-3xl font-bold text-center mb-12">活用例</h2>
-				<div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+				<div className="grid md:grid-cols-3 gap-8">
 					{examples.map((example, index) => (
 						<motion.div
 							key={index}

@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { FileDown, Image as ImageIcon, Zap } from "lucide-react";
+import { Image as ImageIcon, Music2, Zap } from "lucide-react";
 import Image from "next/image";
 
 export function Features() {
@@ -39,12 +39,12 @@ export function Features() {
 					<motion.div
 						initial={{ opacity: 0, y: 20 }}
 						whileInView={{ opacity: 1, y: 0 }}
-						transition={{ duration: 0.5, delay: 0.1 }}
+						transition={{ duration: 0.5, delay: 0.2 }}
 						className="bg-card rounded-lg border overflow-hidden"
 					>
 						<div className="relative h-48">
 							<Image
-								src="https://images.unsplash.com/photo-1620641788421-7a1c342ea42e?auto=format&fit=crop&q=80"
+								src="https://images.unsplash.com/photo-1542831371-29b0f74f9713?auto=format&fit=crop&q=80"
 								alt="背景除去"
 								fill
 								className="object-cover"
@@ -53,34 +53,34 @@ export function Features() {
 						<div className="p-6">
 							<Zap className="h-12 w-12 text-primary mb-4" />
 							<h3 className="text-xl font-semibold mb-2">
-								背景除去
+								AI背景除去
 							</h3>
 							<p className="text-muted-foreground">
-								ワンクリックで背景を自動除去。商品画像の編集や素材作成が驚くほど簡単に。
+								画像から背景を自動で除去。商品写真やプロフィール画像の編集に最適です。
 							</p>
 						</div>
 					</motion.div>
 					<motion.div
 						initial={{ opacity: 0, y: 20 }}
 						whileInView={{ opacity: 1, y: 0 }}
-						transition={{ duration: 0.5, delay: 0.2 }}
+						transition={{ duration: 0.5, delay: 0.1 }}
 						className="bg-card rounded-lg border overflow-hidden"
 					>
 						<div className="relative h-48">
 							<Image
-								src="https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?auto=format&fit=crop&q=80"
-								alt="画像圧縮"
+								src="https://images.unsplash.com/photo-1470225620780-dba8ba36b745?auto=format&fit=crop&q=80"
+								alt="音楽生成"
 								fill
 								className="object-cover"
 							/>
 						</div>
 						<div className="p-6">
-							<FileDown className="h-12 w-12 text-primary mb-4" />
+							<Music2 className="h-12 w-12 text-primary mb-4" />
 							<h3 className="text-xl font-semibold mb-2">
-								画像圧縮
+								音楽生成
 							</h3>
 							<p className="text-muted-foreground">
-								品質を保ちながら最適なサイズに圧縮。ウェブサイトのパフォーマンスを向上。
+								AIが作る完全オリジナルの楽曲。動画やプレゼンテーションのBGMをカスタム作成。
 							</p>
 						</div>
 					</motion.div>

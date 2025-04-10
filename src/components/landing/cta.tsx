@@ -18,8 +18,8 @@ export function CTA() {
 						今すぐ始めましょう
 					</h2>
 					<p className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto">
-						無料トライアルで20クレジットをプレゼント。
-						メールアドレスを登録するだけで、すぐに利用開始できます。
+						無料トライアルで5クレジットをプレゼント。
+						登録するだけで、すぐに利用開始できます。
 					</p>
 					<Button size="lg" className="gap-2">
 						無料トライアルを始める

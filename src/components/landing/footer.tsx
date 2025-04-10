@@ -10,7 +10,7 @@ export function Footer() {
 					<div>
 						<div className="flex items-center space-x-2 mb-4">
 							<Sparkles className="h-6 w-6 text-primary" />
-							<span className="text-xl font-bold">AImagine</span>
+							<span className="text-xl font-bold">AIStation</span>
 						</div>
 						<p className="text-sm text-muted-foreground">
 							AIで画像編集をもっと簡単に。
@@ -106,7 +106,7 @@ export function Footer() {
 					</div>
 				</div>
 				<div className="mt-8 pt-8 border-t text-center text-sm text-muted-foreground">
-					© 2024 AImagine. All rights reserved.
+					© 2024 AIStation. All rights reserved.
 				</div>
 			</div>
 		</footer>
