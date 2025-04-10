@@ -55,6 +55,8 @@ export async function generateImage(
 
 			const data = await response.json();
 
+			console.log("data = ", response.json);
+
 			await decrementUserCredits(user.id);
 
 			revalidatePath("/dashboard"); // ダッシュボード自体のキャッシュを再検証する　画面をリロードしなくても取得した値を画面へ即時反映させるテクニック
@@ -126,6 +128,8 @@ export async function removeBackground(
 			}
 
 			const data = await response.json();
+
+			console.log("data = ", data);
 
 			return {
 				status: "success",
@@ -203,6 +207,8 @@ export async function generateMusic(
 			);
 
 			const data = await response.json();
+
+			console.log("data = ", data);
 
 			await decrementUserCredits(user.id);
 

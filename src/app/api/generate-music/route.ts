@@ -36,6 +36,8 @@ export async function POST(req: Request) {
 			throw new Error(`${response.status}: ${response.data.toString()}`);
 		}
 
+		console.log("response = ", response);
+
 		// Base64 Encoding
 		const base64Audio = Buffer.from(response.data).toString("base64");
 		const musicUrl = `data:audio/mp3;base64,${base64Audio}`;
