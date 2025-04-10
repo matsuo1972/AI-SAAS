@@ -72,7 +72,8 @@ export default function MusicGenerator() {
 							<span className="pr-5">duration:</span>
 							<span className="pr-5">{durationRange}</span>
 							<Slider
-								defaultValue={[190]}
+								disabled
+								defaultValue={[30]}
 								max={190}
 								min={1}
 								step={1}
