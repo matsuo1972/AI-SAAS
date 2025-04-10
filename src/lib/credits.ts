@@ -20,10 +20,14 @@ export async function getUserCredits() {
 			},
 			select: {
 				credits: true,
+				subscriptionState: true,
 			},
 		});
 
-		return dbUser?.credits ?? 0; // もし存在しなければ0を返す
+		return {
+			credits: dbUser?.credits ?? 0,
+			subscriptionState: dbUser?.subscriptionState,
+		}; // もし存在しなければ0を返す
 	} catch (error) {
 		console.error("error fetching user credits: ", error);
 		return 0;

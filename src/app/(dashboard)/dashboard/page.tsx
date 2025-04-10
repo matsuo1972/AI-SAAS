@@ -1,5 +1,3 @@
-"use client";
-
 import { CreditStatus } from "@/components/dashboard/credit-status";
 import { RecentActivity } from "@/components/dashboard/recent-activity";
 import { Tools } from "@/components/dashboard/tools";

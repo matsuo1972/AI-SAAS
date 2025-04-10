@@ -19,7 +19,7 @@ model User {
   clerkId String @unique
   email String @unique
   stripeCustomerId String? @unique
-  credits Int @default(10)
+  credits Int @default(20)
   subscriptionState SubscriptionStatus @default(FREE)
   subscriptions Subscription?
   createdAt DateTime @default(now())

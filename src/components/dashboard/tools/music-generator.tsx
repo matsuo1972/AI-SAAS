@@ -34,7 +34,7 @@ export default function MusicGenerator() {
 	);
 
 	if (state.error && state.redirect) {
-		console.error("error: ", state.redirect);
+		console.log("error: ", state.redirect);
 		return redirect(state.redirect);
 	}
 

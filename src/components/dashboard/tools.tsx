@@ -8,7 +8,7 @@ import {
 	CardHeader,
 	CardTitle,
 } from "@/components/ui/card";
-import { FileDown, Sparkles, Zap } from "lucide-react";
+import { Music2, Sparkles, Zap } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -24,16 +24,16 @@ export function Tools() {
 		{
 			href: "/dashboard/remove-bg",
 			title: "背景除去",
-			description: "画像から背景を自動で除去",
+			description: "アップロードした画像から背景を自動で除去",
 			icon: Zap,
 			image: "https://images.unsplash.com/photo-1542831371-29b0f74f9713?auto=format&fit=crop&q=80",
 		},
 		{
-			href: "/dashboard/compress",
-			title: "画像圧縮",
-			description: "画像を最適なサイズに圧縮",
-			icon: FileDown,
-			image: "https://images.unsplash.com/photo-1551650975-87deedd944c3?auto=format&fit=crop&q=80",
+			href: "/dashboard/music",
+			title: "AI音楽生成",
+			description: "テキストプロンプトからオリジナル楽曲を生成",
+			icon: Music2,
+			image: "https://images.unsplash.com/photo-1511379938547-c1f69419868d?auto=format&fit=crop&q=80",
 		},
 	];
 

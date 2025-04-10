@@ -20,8 +20,11 @@ export async function generateImage(
 		}
 
 		// クレジット残高をチェックする
-		const credits = await getUserCredits();
-		if (credits === null || credits < 1) {
+		const dbData = await getUserCredits();
+		if (!dbData) {
+			throw new Error("クレジット取得エラー");
+		}
+		if (dbData.credits === null || dbData.credits < 1) {
 			return {
 				status: "error",
 				error: "クレジット残高が不足しています",
@@ -88,8 +91,11 @@ export async function removeBackground(
 		}
 
 		// クレジット残高をチェックする
-		const credits = await getUserCredits();
-		if (credits === null || credits < 1) {
+		const dbData = await getUserCredits();
+		if (!dbData) {
+			throw new Error("クレジット取得エラー");
+		}
+		if (dbData.credits === null || dbData.credits < 1) {
 			return {
 				status: "error",
 				error: "クレジット残高が不足しています",
@@ -153,8 +159,11 @@ export async function generateMusic(
 		}
 
 		// クレジット残高をチェックする
-		const credits = await getUserCredits();
-		if (credits === null || credits < 1) {
+		const dbData = await getUserCredits();
+		if (!dbData) {
+			throw new Error("クレジット取得エラー");
+		}
+		if (dbData.credits === null || dbData.credits < 1) {
 			return {
 				status: "error",
 				error: "クレジット残高が不足しています",
