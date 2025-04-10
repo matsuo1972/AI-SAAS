@@ -20,7 +20,7 @@ const initialState: GenerateMusicState = {
 export default function MusicGenerator() {
 	const audioRef = useRef<HTMLAudioElement>(null);
 
-	const [durationRange, setDurationRange] = useState(190);
+	const [durationRange, setDurationRange] = useState(30);
 	const [seedRange, setSeedRange] = useState(0);
 	const [stepRange, setStepRange] = useState(50);
 	const [cfgScaleRange, setCfgScaleRange] = useState(7);
