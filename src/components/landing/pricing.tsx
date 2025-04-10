@@ -3,6 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
+import Link from "next/link";
 
 export function Pricing() {
 	return (
@@ -32,7 +33,9 @@ export function Pricing() {
 								<span>全機能利用可能</span>
 							</li>
 						</ul>
-						<Button className="w-full">無料で始める</Button>
+						<Button className="w-full">
+							<Link href={"/dashboard"}>無料で始める</Link>
+						</Button>
 					</motion.div>
 					<motion.div
 						initial={{ opacity: 0, y: 20 }}
@@ -54,8 +57,8 @@ export function Pricing() {
 								<span>全機能利用可能</span>
 							</li>
 						</ul>
-						<Button className="w-full" variant="outline">
-							お問い合わせ
+						<Button className="w-full" variant="default">
+							<Link href={"/dashboard/plan"}>STARTER</Link>
 						</Button>
 					</motion.div>
 					<motion.div
@@ -79,7 +82,7 @@ export function Pricing() {
 							</li>
 						</ul>
 						<Button className="w-full" variant="default">
-							プロプランを選択
+							<Link href={"/dashboard/plan"}>PRO</Link>
 						</Button>
 					</motion.div>
 					<motion.div
@@ -102,8 +105,8 @@ export function Pricing() {
 								<span>全機能利用可能</span>
 							</li>
 						</ul>
-						<Button className="w-full" variant="outline">
-							お問い合わせ
+						<Button className="w-full" variant="default">
+							<Link href={"/dashboard/plan"}>ENTERPRISE</Link>
 						</Button>
 					</motion.div>
 				</div>
