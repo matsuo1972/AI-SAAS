@@ -4,6 +4,8 @@ import DashboardNav from "@/components/dashboard/nav";
 import { Toaster } from "@/components/ui/sonner";
 import Link from "next/link";
 
+export const dynamic = 'force-dynamic';
+
 export default function DashboardLayout({
 	children,
 }: Readonly<{
