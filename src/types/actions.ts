@@ -22,12 +22,12 @@ export type StripeState = {
 };
 
 export type GenerateMusicState = {
-	audioData?: null;
-	fileName?: "generated-music.mp3";
+	audioData?: string | null;
+	fileName?: string;
 	error?: string;
 	success?: boolean;
 	status: "idle" | "error" | "success";
 	keyword?: string;
 	redirect?: string;
-	format?: "mp3";
+	format?: string;
 };

@@ -1,77 +1,34 @@
-import axios from "axios";
-import FormData from "form-data";
+import { removeBackgroundFromApi } from "@/lib/stability-api";
+import { auth } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
-import sharp from "sharp";
 
 export async function POST(req: Request) {
-	const formData = await req.formData();
-	const file = formData.get("image") as File;
-	const fileName = file["name"];
-
-	if (!file) {
-		return NextResponse.json(
-			{
-				error: "画像ファイルを選択してください",
-			},
-			{ status: 400 }
-		);
-	}
-
-	const bytes = await file.arrayBuffer();
-	const buffer = Buffer.from(bytes);
-
-	const optimizedInput = await sharp(buffer)
-		.resize(1280, 720)
-		.png({ quality: 80, compressionLevel: 9 })
-		.toBuffer();
-
 	try {
-		const formData = new FormData();
-		formData.append("image", optimizedInput, {
-			filename: "image.png",
-			contentType: "image/png",
-		});
-		formData.append("output_format", "png");
-
-		const response = await axios.post(
-			`https://api.stability.ai/v2beta/stable-image/edit/remove-background`,
-			formData,
-			{
-				validateStatus: undefined,
-				responseType: "arraybuffer",
-				headers: {
-					Authorization: `Bearer ${process.env.STABILITY_API_KEY}`,
-					Accept: "image/*",
-				},
-			}
-		);
-
-		if (response.status !== 200) {
-			throw new Error(`${response.status}: ${response.data.toString()}`);
+		const { userId } = await auth();
+		if (!userId) {
+			return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 		}
 
-		console.log("response = ", response);
+		const formData = await req.formData();
+		const file = formData.get("image") as File;
 
-		// 画像の最適化(画像の圧縮処理)
-		const optimizedImage = await sharp(response.data)
-			.resize(1280, 720)
-			.png({ quality: 80, compressionLevel: 9 })
-			.toBuffer();
+		if (!file) {
+			return NextResponse.json(
+				{ error: "画像ファイルを選択してください" },
+				{ status: 400 }
+			);
+		}
 
-		// Base64 Encoding
-		const base64Image = optimizedImage.toString("base64");
-		const imageUrl = `data:image/png;base64,${base64Image}`;
+		const bytes = await file.arrayBuffer();
+		const buffer = Buffer.from(bytes);
+		const data = await removeBackgroundFromApi(buffer, file.name);
 
-		return NextResponse.json({ imageUrl: imageUrl, fileName: fileName });
+		return NextResponse.json(data);
 	} catch (error) {
-		console.error("Error generate image", error);
+		console.error("Error removing background:", error);
 		return NextResponse.json(
-			{
-				error: "Failed to generate image",
-			},
-			{
-				status: 500,
-			}
+			{ error: "Failed to remove background" },
+			{ status: 500 }
 		);
 	}
 }

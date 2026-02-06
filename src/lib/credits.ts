@@ -36,21 +36,30 @@ export async function getUserCredits() {
 
 export async function decrementUserCredits(clerkId: string) {
 	try {
-		const user = await prisma.user.update({
+		const result = await prisma.user.updateMany({
 			where: {
 				clerkId: clerkId,
+				credits: {
+					gt: 0,
+				},
 			},
 			data: {
 				credits: {
-					decrement: 1, // -1してくれる書き方
+					decrement: 1,
 				},
-			},
-			select: {
-				credits: true,
 			},
 		});
 
-		return user?.credits ?? 0; // もし存在しなければ0を返す
+		if (result.count === 0) {
+			throw new Error("Insufficient credits");
+		}
+
+		const user = await prisma.user.findUnique({
+			where: { clerkId },
+			select: { credits: true },
+		});
+
+		return user?.credits ?? 0;
 	} catch (error) {
 		console.error("error decrementing user credits: ", error);
 		throw new Error("Failed to update credits");

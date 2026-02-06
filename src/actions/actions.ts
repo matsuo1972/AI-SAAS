@@ -2,6 +2,11 @@
 
 import { decrementUserCredits, getUserCredits } from "@/lib/credits";
 import {
+	generateImageFromApi,
+	generateMusicFromApi,
+	removeBackgroundFromApi,
+} from "@/lib/stability-api";
+import {
 	GenerateImageState,
 	GenerateMusicState,
 	RemoveBackgroundState,
@@ -19,7 +24,6 @@ export async function generateImage(
 			throw new Error("認証が必要です");
 		}
 
-		// クレジット残高をチェックする
 		const dbData = await getUserCredits();
 		if (!dbData) {
 			throw new Error("クレジット取得エラー");
@@ -28,9 +32,8 @@ export async function generateImage(
 			return {
 				status: "error",
 				error: "クレジット残高が不足しています",
-				redirect: "/dashboard/plan?reason=insufficient_credits", // try catch の中でredirectができないのでクライアントサイドでリダイレクトさせる　insufficient_creditsは無効なクレジットという意味　reasonというクエリパラメータに理由をつける　この場合は残高が不足しているので課金ページで課金してくださいと誘導する
+				redirect: "/dashboard/plan?reason=insufficient_credits",
 			};
-			// redirect('/dashboard/plan?reason=insufficient_credits'); // insufficient_creditsは無効なクレジットという意味　reasonというクエリパラメータに理由をつける　この場合は残高が不足しているので課金ページで課金してくださいと誘導する
 		}
 
 		const keyword = formData.get("keyword");
@@ -41,38 +44,17 @@ export async function generateImage(
 				error: "キーワードを入力してください",
 			};
 		}
-		try {
-			const response = await fetch(
-				`${process.env.BASE_URL}/api/generate-image`,
-				{
-					method: "POST",
-					headers: {
-						"Content-Type": "application/json",
-					},
-					body: JSON.stringify({ keyword }),
-				}
-			);
 
-			const data = await response.json();
+		const imageUrl = await generateImageFromApi(keyword);
 
-			console.log("data = ", response.json);
+		await decrementUserCredits(user.id);
+		revalidatePath("/dashboard");
 
-			await decrementUserCredits(user.id);
-
-			revalidatePath("/dashboard"); // ダッシュボード自体のキャッシュを再検証する　画面をリロードしなくても取得した値を画面へ即時反映させるテクニック
-
-			return {
-				status: "success",
-				imageUrl: data.imageUrl,
-				keyword: keyword,
-			};
-		} catch (err) {
-			console.error("fetch failed", err);
-			return {
-				status: "error",
-				error: "画像の生成に失敗しました",
-			};
-		}
+		return {
+			status: "success",
+			imageUrl,
+			keyword,
+		};
 	} catch (error) {
 		console.error(error);
 		return {
@@ -92,7 +74,6 @@ export async function removeBackground(
 			throw new Error("認証が必要です");
 		}
 
-		// クレジット残高をチェックする
 		const dbData = await getUserCredits();
 		if (!dbData) {
 			throw new Error("クレジット取得エラー");
@@ -101,9 +82,8 @@ export async function removeBackground(
 			return {
 				status: "error",
 				error: "クレジット残高が不足しています",
-				redirect: "/dashboard/plan?reason=insufficient_credits", // try catch の中でredirectができないのでクライアントサイドでリダイレクトさせる　insufficient_creditsは無効なクレジットという意味　reasonというクエリパラメータに理由をつける　この場合は残高が不足しているので課金ページで課金してくださいと誘導する
+				redirect: "/dashboard/plan?reason=insufficient_credits",
 			};
-			// redirect('/dashboard/plan?reason=insufficient_credits'); // insufficient_creditsは無効なクレジットという意味　reasonというクエリパラメータに理由をつける　この場合は残高が不足しているので課金ページで課金してくださいと誘導する
 		}
 
 		const image = formData.get("image") as File;
@@ -114,40 +94,24 @@ export async function removeBackground(
 				error: "画像ファイルを選択してください",
 			};
 		}
-		try {
-			const response = await fetch(
-				`${process.env.BASE_URL}/api/remove-background`,
-				{
-					method: "POST",
-					body: formData,
-				}
-			);
 
-			if (!response.ok) {
-				throw new Error("背景の削除に失敗しました");
-			}
+		const bytes = await image.arrayBuffer();
+		const buffer = Buffer.from(bytes);
+		const data = await removeBackgroundFromApi(buffer, image.name);
 
-			const data = await response.json();
+		await decrementUserCredits(user.id);
+		revalidatePath("/dashboard");
 
-			console.log("data = ", data);
-
-			return {
-				status: "success",
-				processedImage: data.imageUrl,
-				fileName: data.fileName.split(".")[0],
-			};
-		} catch (err) {
-			console.error("fetch failed", err);
-			return {
-				status: "error",
-				error: "画像の透過に失敗しました",
-			};
-		}
+		return {
+			status: "success",
+			processedImage: data.imageUrl,
+			fileName: data.fileName.split(".")[0],
+		};
 	} catch (error) {
 		console.error(error);
 		return {
 			status: "error",
-			error: "画像の生成に失敗しました",
+			error: "画像の透過に失敗しました",
 		};
 	}
 }
@@ -162,7 +126,6 @@ export async function generateMusic(
 			throw new Error("認証が必要です");
 		}
 
-		// クレジット残高をチェックする
 		const dbData = await getUserCredits();
 		if (!dbData) {
 			throw new Error("クレジット取得エラー");
@@ -171,9 +134,8 @@ export async function generateMusic(
 			return {
 				status: "error",
 				error: "クレジット残高が不足しています",
-				redirect: "/dashboard/plan?reason=insufficient_credits", // try catch の中でredirectができないのでクライアントサイドでリダイレクトさせる　insufficient_creditsは無効なクレジットという意味　reasonというクエリパラメータに理由をつける　この場合は残高が不足しているので課金ページで課金してくださいと誘導する
+				redirect: "/dashboard/plan?reason=insufficient_credits",
 			};
-			// redirect('/dashboard/plan?reason=insufficient_credits'); // insufficient_creditsは無効なクレジットという意味　reasonというクエリパラメータに理由をつける　この場合は残高が不足しているので課金ページで課金してくださいと誘導する
 		}
 
 		const prompt = formData.get("prompt");
@@ -188,51 +150,30 @@ export async function generateMusic(
 				error: "キーワードを入力してください",
 			};
 		}
-		try {
-			const response = await fetch(
-				`${process.env.BASE_URL}/api/generate-music`,
-				{
-					method: "POST",
-					headers: {
-						"Content-Type": "application/json",
-					},
-					body: JSON.stringify({
-						prompt,
-						duration,
-						seed,
-						steps,
-						cfgScale,
-					}),
-				}
-			);
 
-			const data = await response.json();
+		const data = await generateMusicFromApi(
+			prompt,
+			String(duration),
+			String(seed),
+			String(steps),
+			String(cfgScale)
+		);
 
-			console.log("data = ", data);
+		await decrementUserCredits(user.id);
+		revalidatePath("/dashboard");
 
-			await decrementUserCredits(user.id);
-
-			revalidatePath("/dashboard"); // ダッシュボード自体のキャッシュを再検証する　画面をリロードしなくても取得した値を画面へ即時反映させるテクニック
-
-			return {
-				// status: "success",
-				success: data.success,
-				audioData: data.audioData,
-				fileName: data.fileName,
-				format: data.format,
-			} as GenerateMusicState;
-		} catch (err) {
-			console.error("fetch failed", err);
-			return {
-				status: "error",
-				error: "画像の生成に失敗しました",
-			};
-		}
+		return {
+			status: "success",
+			success: data.success,
+			audioData: data.audioData,
+			fileName: data.fileName,
+			format: data.format,
+		};
 	} catch (error) {
 		console.error(error);
 		return {
 			status: "error",
-			error: "画像の生成に失敗しました",
+			error: "音楽の生成に失敗しました",
 		};
 	}
 }

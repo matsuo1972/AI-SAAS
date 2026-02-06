@@ -1,57 +1,30 @@
-import axios from "axios";
-import FormData from "form-data";
+import { generateImageFromApi } from "@/lib/stability-api";
+import { auth } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
-import sharp from "sharp";
 
 export async function POST(req: Request) {
-	const { keyword } = await req.json();
 	try {
-		const payload = {
-			prompt: `Create Image with ${keyword}`,
-			output_format: "png",
-		};
-		const formData = new FormData();
-		formData.append("prompt", payload.prompt);
-		formData.append("output_Format", payload.output_format);
-
-		const response = await axios.postForm(
-			`https://api.stability.ai/v2beta/stable-image/generate/core`,
-			formData,
-			{
-				validateStatus: undefined,
-				responseType: "arraybuffer",
-				headers: {
-					Authorization: `Bearer ${process.env.STABILITY_API_KEY}`,
-					Accept: "image/*",
-				},
-			}
-		);
-
-		if (response.status !== 200) {
-			throw new Error(`${response.status}: ${response.data.toString()}`);
+		const { userId } = await auth();
+		if (!userId) {
+			return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 		}
 
-		console.log("response = ", response);
+		const { keyword } = await req.json();
 
-		// 画像の最適化(画像の圧縮処理)
-		const optimizedImage = await sharp(response.data)
-			.resize(1280, 720)
-			.png({ quality: 80, compressionLevel: 9 })
-			.toBuffer();
-		// Base64 Encoding
-		const base64Image = optimizedImage.toString("base64");
-		const imageUrl = `data:image/png;base64,${base64Image}`;
+		if (!keyword || typeof keyword !== "string") {
+			return NextResponse.json(
+				{ error: "Invalid keyword" },
+				{ status: 400 }
+			);
+		}
 
+		const imageUrl = await generateImageFromApi(keyword);
 		return NextResponse.json({ imageUrl });
 	} catch (error) {
-		console.error("Error generate image", error);
+		console.error("Error generating image:", error);
 		return NextResponse.json(
-			{
-				error: "Failed to generate image",
-			},
-			{
-				status: 500,
-			}
+			{ error: "Failed to generate image" },
+			{ status: 500 }
 		);
 	}
 }

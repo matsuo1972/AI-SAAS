@@ -8,9 +8,8 @@ export async function POST(req: Request) {
 	const SIGNING_SECRET = process.env.SIGNING_SECRET;
 
 	if (!SIGNING_SECRET) {
-		throw new Error(
-			"Error: Please add SIGNING_SECRET from Clerk Dashboard to .env or .env"
-		);
+		console.error("SIGNING_SECRET is not configured");
+		return new Response("Webhook configuration error", { status: 500 });
 	}
 
 	// Create new Svix instance with secret
@@ -59,7 +58,8 @@ export async function POST(req: Request) {
 
 			return NextResponse.json({ user }, { status: 201 });
 		} catch (error) {
-			return NextResponse.json({ error }, { status: 500 });
+			console.error("Webhook handler error:", error);
+			return NextResponse.json({ error: "Internal server error" }, { status: 500 });
 		}
 	}
 
@@ -71,7 +71,8 @@ export async function POST(req: Request) {
 
 			return NextResponse.json({ user }, { status: 200 });
 		} catch (error) {
-			return NextResponse.json({ error }, { status: 500 });
+			console.error("Webhook handler error:", error);
+			return NextResponse.json({ error: "Internal server error" }, { status: 500 });
 		}
 	}
 
@@ -79,14 +80,15 @@ export async function POST(req: Request) {
 		const { id } = evt.data;
 
 		if (!id) {
-			throw new Error("Failed to Delete User table");
+			return NextResponse.json({ error: "Missing user ID" }, { status: 400 });
 		}
 		try {
 			const user = await deleteUser(id);
 
 			return NextResponse.json({ user }, { status: 201 });
 		} catch (error) {
-			return NextResponse.json({ error }, { status: 500 });
+			console.error("Webhook handler error:", error);
+			return NextResponse.json({ error: "Internal server error" }, { status: 500 });
 		}
 	}
 
