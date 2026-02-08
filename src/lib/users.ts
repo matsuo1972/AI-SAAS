@@ -15,7 +15,7 @@ export async function createUser(clerkId: string, email: string) {
         return NextResponse.json({ user }, { status: 201 }); //　リソース作成時は201
     } catch (error) {
         console.error('Failed to create User: ', error)
-        return NextResponse.json({error}, {status: 500})
+        return NextResponse.json({ error: "Internal server error" }, { status: 500 })
     }
 }
 
@@ -33,7 +33,7 @@ export async function updateUser(clerkId: string, email: string) {
         return NextResponse.json({ user }, { status: 200 }); // 更新時は200
     } catch (error) {
         console.error('Failed to create User: ', error)
-        return NextResponse.json({error}, {status: 500})
+        return NextResponse.json({ error: "Internal server error" }, { status: 500 })
     }
 }
 
@@ -59,6 +59,6 @@ export async function deleteUser(clerkId: string) {
         return NextResponse.json({ user }, { status: 200 }); 
     } catch (error) {
         console.error('Failed to create User: ', error)
-        return NextResponse.json({error}, {status: 500})
+        return NextResponse.json({ error: "Internal server error" }, { status: 500 })
     }
 }

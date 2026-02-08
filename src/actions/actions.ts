@@ -1,6 +1,6 @@
 "use server";
 
-import { decrementUserCredits, getUserCredits } from "@/lib/credits";
+import { decrementUserCredits } from "@/lib/credits";
 import {
 	generateImageFromApi,
 	generateMusicFromApi,
@@ -24,18 +24,6 @@ export async function generateImage(
 			throw new Error("認証が必要です");
 		}
 
-		const dbData = await getUserCredits();
-		if (!dbData) {
-			throw new Error("クレジット取得エラー");
-		}
-		if (dbData.credits === null || dbData.credits < 1) {
-			return {
-				status: "error",
-				error: "クレジット残高が不足しています",
-				redirect: "/dashboard/plan?reason=insufficient_credits",
-			};
-		}
-
 		const keyword = formData.get("keyword");
 
 		if (!keyword || typeof keyword !== "string") {
@@ -45,9 +33,16 @@ export async function generateImage(
 			};
 		}
 
-		const imageUrl = await generateImageFromApi(keyword);
+		const decremented = await decrementUserCredits(user.id);
+		if (!decremented) {
+			return {
+				status: "error",
+				error: "クレジット残高が不足しています",
+				redirect: "/dashboard/plan?reason=insufficient_credits",
+			};
+		}
 
-		await decrementUserCredits(user.id);
+		const imageUrl = await generateImageFromApi(keyword);
 		revalidatePath("/dashboard");
 
 		return {
@@ -74,18 +69,6 @@ export async function removeBackground(
 			throw new Error("認証が必要です");
 		}
 
-		const dbData = await getUserCredits();
-		if (!dbData) {
-			throw new Error("クレジット取得エラー");
-		}
-		if (dbData.credits === null || dbData.credits < 1) {
-			return {
-				status: "error",
-				error: "クレジット残高が不足しています",
-				redirect: "/dashboard/plan?reason=insufficient_credits",
-			};
-		}
-
 		const image = formData.get("image") as File;
 
 		if (!image) {
@@ -95,11 +78,18 @@ export async function removeBackground(
 			};
 		}
 
+		const decremented = await decrementUserCredits(user.id);
+		if (!decremented) {
+			return {
+				status: "error",
+				error: "クレジット残高が不足しています",
+				redirect: "/dashboard/plan?reason=insufficient_credits",
+			};
+		}
+
 		const bytes = await image.arrayBuffer();
 		const buffer = Buffer.from(bytes);
 		const data = await removeBackgroundFromApi(buffer, image.name);
-
-		await decrementUserCredits(user.id);
 		revalidatePath("/dashboard");
 
 		return {
@@ -126,18 +116,6 @@ export async function generateMusic(
 			throw new Error("認証が必要です");
 		}
 
-		const dbData = await getUserCredits();
-		if (!dbData) {
-			throw new Error("クレジット取得エラー");
-		}
-		if (dbData.credits === null || dbData.credits < 1) {
-			return {
-				status: "error",
-				error: "クレジット残高が不足しています",
-				redirect: "/dashboard/plan?reason=insufficient_credits",
-			};
-		}
-
 		const prompt = formData.get("prompt");
 		const duration = formData.get("duration");
 		const seed = formData.get("seed");
@@ -151,6 +129,15 @@ export async function generateMusic(
 			};
 		}
 
+		const decremented = await decrementUserCredits(user.id);
+		if (!decremented) {
+			return {
+				status: "error",
+				error: "クレジット残高が不足しています",
+				redirect: "/dashboard/plan?reason=insufficient_credits",
+			};
+		}
+
 		const data = await generateMusicFromApi(
 			prompt,
 			String(duration),
@@ -158,8 +145,6 @@ export async function generateMusic(
 			String(steps),
 			String(cfgScale)
 		);
-
-		await decrementUserCredits(user.id);
 		revalidatePath("/dashboard");
 
 		return {

@@ -1,21 +1,15 @@
 import { removeBackgroundFromApi } from "@/lib/stability-api";
 import { auth } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
-import { getUserCredits, decrementUserCredits } from "@/lib/credits";
+import { decrementUserCredits } from "@/lib/credits";
+
+const MAX_FILE_SIZE = 10 * 1024 * 1024;
 
 export async function POST(req: Request) {
 	try {
 		const { userId } = await auth();
 		if (!userId) {
 			return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-		}
-
-		const userCredits = await getUserCredits();
-		if (!userCredits || userCredits.credits <= 0) {
-			return NextResponse.json(
-				{ error: "クレジットが不足しています" },
-				{ status: 403 }
-			);
 		}
 
 		const formData = await req.formData();
@@ -28,11 +22,24 @@ export async function POST(req: Request) {
 			);
 		}
 
+		if (file.size > MAX_FILE_SIZE) {
+			return NextResponse.json(
+				{ error: "ファイルサイズは10MB以下にしてください" },
+				{ status: 400 }
+			);
+		}
+
+		const decremented = await decrementUserCredits(userId);
+		if (!decremented) {
+			return NextResponse.json(
+				{ error: "クレジットが不足しています" },
+				{ status: 403 }
+			);
+		}
+
 		const bytes = await file.arrayBuffer();
 		const buffer = Buffer.from(bytes);
 		const data = await removeBackgroundFromApi(buffer, file.name);
-
-		await decrementUserCredits(userId);
 
 		return NextResponse.json(data);
 	} catch (error) {
