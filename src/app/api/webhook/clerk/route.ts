@@ -48,15 +48,12 @@ export async function POST(req: Request) {
 		});
 	}
 
-	// Do something with payload
-	// For this guide, log payload to console
 	if (evt.type === "user.created") {
 		const { id, email_addresses } = evt.data;
 		const email = email_addresses[0].email_address;
 		try {
-			const user = await createUser(id, email);
-
-			return NextResponse.json({ user }, { status: 201 });
+			await createUser(id, email);
+			return NextResponse.json({ success: true }, { status: 201 });
 		} catch (error) {
 			console.error("Webhook handler error:", error);
 			return NextResponse.json({ error: "Internal server error" }, { status: 500 });
@@ -67,9 +64,8 @@ export async function POST(req: Request) {
 		const { id, email_addresses } = evt.data;
 		const email = email_addresses[0].email_address;
 		try {
-			const user = await updateUser(id, email);
-
-			return NextResponse.json({ user }, { status: 200 });
+			await updateUser(id, email);
+			return NextResponse.json({ success: true }, { status: 200 });
 		} catch (error) {
 			console.error("Webhook handler error:", error);
 			return NextResponse.json({ error: "Internal server error" }, { status: 500 });
@@ -83,9 +79,8 @@ export async function POST(req: Request) {
 			return NextResponse.json({ error: "Missing user ID" }, { status: 400 });
 		}
 		try {
-			const user = await deleteUser(id);
-
-			return NextResponse.json({ user }, { status: 201 });
+			await deleteUser(id);
+			return NextResponse.json({ success: true }, { status: 200 });
 		} catch (error) {
 			console.error("Webhook handler error:", error);
 			return NextResponse.json({ error: "Internal server error" }, { status: 500 });

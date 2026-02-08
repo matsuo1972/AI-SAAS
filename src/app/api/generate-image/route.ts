@@ -12,9 +12,16 @@ export async function POST(req: Request) {
 
 		const { keyword } = await req.json();
 
-		if (!keyword || typeof keyword !== "string") {
+		if (!keyword || typeof keyword !== "string" || keyword.trim().length === 0) {
 			return NextResponse.json(
 				{ error: "Invalid keyword" },
+				{ status: 400 }
+			);
+		}
+
+		if (keyword.length > 1000) {
+			return NextResponse.json(
+				{ error: "キーワードは1000文字以内にしてください" },
 				{ status: 400 }
 			);
 		}

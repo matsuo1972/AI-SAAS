@@ -12,9 +12,35 @@ export async function POST(req: Request) {
 
 		const { prompt, duration, seed, steps, cfgScale } = await req.json();
 
-		if (!prompt || typeof prompt !== "string") {
+		if (!prompt || typeof prompt !== "string" || prompt.trim().length === 0) {
 			return NextResponse.json(
 				{ error: "Invalid prompt" },
+				{ status: 400 }
+			);
+		}
+
+		if (prompt.length > 1000) {
+			return NextResponse.json(
+				{ error: "プロンプトは1000文字以内にしてください" },
+				{ status: 400 }
+			);
+		}
+
+		const safeDuration = Number(duration);
+		const safeSteps = Number(steps);
+		const safeSeed = Number(seed);
+		const safeCfgScale = Number(cfgScale);
+
+		if (isNaN(safeDuration) || safeDuration < 1 || safeDuration > 300) {
+			return NextResponse.json(
+				{ error: "durationは1〜300の範囲で指定してください" },
+				{ status: 400 }
+			);
+		}
+
+		if (isNaN(safeSteps) || safeSteps < 1 || safeSteps > 150) {
+			return NextResponse.json(
+				{ error: "stepsは1〜150の範囲で指定してください" },
 				{ status: 400 }
 			);
 		}
@@ -27,7 +53,13 @@ export async function POST(req: Request) {
 			);
 		}
 
-		const data = await generateMusicFromApi(prompt, duration, seed, steps, cfgScale);
+		const data = await generateMusicFromApi(
+			prompt,
+			String(safeDuration),
+			String(safeSeed),
+			String(safeSteps),
+			String(safeCfgScale)
+		);
 
 		return NextResponse.json(data);
 	} catch (error) {

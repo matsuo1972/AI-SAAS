@@ -4,6 +4,12 @@ import { NextResponse } from "next/server";
 import { decrementUserCredits } from "@/lib/credits";
 
 const MAX_FILE_SIZE = 10 * 1024 * 1024;
+const ALLOWED_MIME_TYPES = new Set([
+	"image/png",
+	"image/jpeg",
+	"image/webp",
+	"image/gif",
+]);
 
 export async function POST(req: Request) {
 	try {
@@ -18,6 +24,13 @@ export async function POST(req: Request) {
 		if (!file) {
 			return NextResponse.json(
 				{ error: "画像ファイルを選択してください" },
+				{ status: 400 }
+			);
+		}
+
+		if (!ALLOWED_MIME_TYPES.has(file.type)) {
+			return NextResponse.json(
+				{ error: "対応形式: PNG, JPEG, WebP, GIF" },
 				{ status: 400 }
 			);
 		}
