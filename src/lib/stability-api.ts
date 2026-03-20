@@ -28,7 +28,7 @@ export async function generateImageFromApi(keyword: string) {
 				Authorization: `Bearer ${apiKey}`,
 				Accept: "image/*",
 			},
-		}
+		},
 	);
 
 	if (response.status !== 200) {
@@ -44,7 +44,10 @@ export async function generateImageFromApi(keyword: string) {
 	return `data:image/png;base64,${base64Image}`;
 }
 
-export async function removeBackgroundFromApi(fileBuffer: Buffer, fileName: string) {
+export async function removeBackgroundFromApi(
+	fileBuffer: Buffer,
+	fileName: string,
+) {
 	const apiKey = getApiKey();
 
 	const optimizedInput = await sharp(fileBuffer)
@@ -69,7 +72,7 @@ export async function removeBackgroundFromApi(fileBuffer: Buffer, fileName: stri
 				Authorization: `Bearer ${apiKey}`,
 				Accept: "image/*",
 			},
-		}
+		},
 	);
 
 	if (response.status !== 200) {
@@ -93,7 +96,6 @@ export async function generateMusicFromApi(
 	duration: string,
 	seed: string,
 	steps: string,
-	cfgScale: string
 ) {
 	const apiKey = getApiKey();
 	const formData = new FormData();
@@ -112,7 +114,7 @@ export async function generateMusicFromApi(
 				Authorization: `Bearer ${apiKey}`,
 				Accept: "audio/*",
 			},
-		}
+		},
 	);
 
 	if (response.status !== 200) {

@@ -1,28 +1,35 @@
+import { decrementUserCredits } from "@/lib/credits";
 import { generateImageFromApi } from "@/lib/stability-api";
 import { auth } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
-import { decrementUserCredits } from "@/lib/credits";
 
 export async function POST(req: Request) {
 	try {
 		const { userId } = await auth();
 		if (!userId) {
-			return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+			return NextResponse.json(
+				{ error: "Unauthorized" },
+				{ status: 401 },
+			);
 		}
 
 		const { keyword } = await req.json();
 
-		if (!keyword || typeof keyword !== "string" || keyword.trim().length === 0) {
+		if (
+			!keyword ||
+			typeof keyword !== "string" ||
+			keyword.trim().length === 0
+		) {
 			return NextResponse.json(
 				{ error: "Invalid keyword" },
-				{ status: 400 }
+				{ status: 400 },
 			);
 		}
 
 		if (keyword.length > 1000) {
 			return NextResponse.json(
 				{ error: "キーワードは1000文字以内にしてください" },
-				{ status: 400 }
+				{ status: 400 },
 			);
 		}
 
@@ -30,7 +37,7 @@ export async function POST(req: Request) {
 		if (!decremented) {
 			return NextResponse.json(
 				{ error: "クレジットが不足しています" },
-				{ status: 403 }
+				{ status: 403 },
 			);
 		}
 
@@ -41,7 +48,7 @@ export async function POST(req: Request) {
 		console.error("Error generating image:", error);
 		return NextResponse.json(
 			{ error: "Failed to generate image" },
-			{ status: 500 }
+			{ status: 500 },
 		);
 	}
 }

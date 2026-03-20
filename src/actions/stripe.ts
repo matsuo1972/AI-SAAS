@@ -9,7 +9,7 @@ const ALLOWED_PRICE_IDS = new Set(Object.values(STRIPE_PLANS));
 
 export default async function createStripeSession(
 	prevState: StripeState,
-	formData: FormData
+	formData: FormData,
 ): Promise<StripeState> {
 	const priceId = formData.get("priceId") as string;
 
@@ -30,10 +30,8 @@ export default async function createStripeSession(
 			where: { clerkId: user.id },
 		});
 
-		// カスタマーIDを取得
 		let customerId = dbUser?.stripeCustomerId;
 
-		// 最初に決済したユーザーはStripeでユーザーを作成しそのIDをカスタマーIDに代入
 		if (!customerId) {
 			const customer = await stripe.customers.create({
 				email: user.emailAddresses[0].emailAddress,
@@ -50,15 +48,10 @@ export default async function createStripeSession(
 			customerId = customer.id;
 		}
 
-		// const headersList = await headers()
-		// const origin = headersList.get('origin')
-
-		// Create Checkout Sessions from body params.
 		const session = await stripe.checkout.sessions.create({
 			customer: customerId,
 			line_items: [
 				{
-					// Provide the exact Price ID (for example, pr_1234) of the product you want to sell
 					price: priceId,
 					quantity: 1,
 				},
@@ -70,7 +63,6 @@ export default async function createStripeSession(
 				clerkId: user.id,
 			},
 		});
-		// return NextResponse.redirect(session.url!, 303)
 
 		if (!session.url) {
 			throw new Error("セッションの作成に失敗しました");
@@ -82,10 +74,6 @@ export default async function createStripeSession(
 		};
 	} catch (error) {
 		console.error("Stripe session creation error: ", error);
-		// return NextResponse.json(
-		// { error: err.message },
-		// { status: err.statusCode || 500 }
-		// )
 		return {
 			status: "error",
 			error: "決済処理中にエラーが発生しました。",

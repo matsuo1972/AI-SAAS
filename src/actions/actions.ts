@@ -120,7 +120,6 @@ export async function generateMusic(
 		const duration = formData.get("duration");
 		const seed = formData.get("seed");
 		const steps = formData.get("steps");
-		const cfgScale = formData.get("cfgScale");
 
 		if (!prompt || typeof prompt !== "string") {
 			return {
@@ -142,8 +141,7 @@ export async function generateMusic(
 			prompt,
 			String(duration),
 			String(seed),
-			String(steps),
-			String(cfgScale)
+			String(steps)
 		);
 		revalidatePath("/dashboard");
 
