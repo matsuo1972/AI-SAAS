@@ -1,9 +1,17 @@
 import { Crown, Rocket, Sparkles } from "lucide-react";
 
+function getRequiredEnv(name: string): string {
+	const value = process.env[name];
+	if (!value) {
+		throw new Error(`${name} is not configured`);
+	}
+	return value;
+}
+
 export const STRIPE_PLANS = {
-	STARTER: "price_1R8dE6QESOQQDHCZ1mNMZ7li",
-	PRO: "price_1R8dG7QESOQQDHCZCMUHydav",
-	ENTERPRISE: "price_1R8dGhQESOQQDHCZHZfMdk1X",
+	STARTER: getRequiredEnv("STRIPE_PRICE_STARTER"),
+	PRO: getRequiredEnv("STRIPE_PRICE_PRO"),
+	ENTERPRISE: getRequiredEnv("STRIPE_PRICE_ENTERPRISE"),
 };
 
 export const plans = [
