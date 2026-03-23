@@ -23,6 +23,7 @@ export function Features() {
 								src="https://images.unsplash.com/photo-1618005198919-d3d4b5a92ead?auto=format&fit=crop&q=80"
 								alt="AI画像生成"
 								fill
+								sizes="(max-width: 768px) 100vw, 33vw"
 								className="object-cover"
 							/>
 						</div>
@@ -47,6 +48,7 @@ export function Features() {
 								src="https://images.unsplash.com/photo-1542831371-29b0f74f9713?auto=format&fit=crop&q=80"
 								alt="背景除去"
 								fill
+								sizes="(max-width: 768px) 100vw, 33vw"
 								className="object-cover"
 							/>
 						</div>
@@ -71,6 +73,7 @@ export function Features() {
 								src="https://images.unsplash.com/photo-1470225620780-dba8ba36b745?auto=format&fit=crop&q=80"
 								alt="音楽生成"
 								fill
+								sizes="(max-width: 768px) 100vw, 33vw"
 								className="object-cover"
 							/>
 						</div>

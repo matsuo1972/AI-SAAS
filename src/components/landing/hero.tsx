@@ -99,8 +99,7 @@ export function Hero() {
 									src="https://images.unsplash.com/photo-1470225620780-dba8ba36b745?auto=format&fit=crop&q=80"
 									alt="AIStation Dashboard Preview"
 									width={1920}
-									height={1080}
-									className="object-cover"
+									height={1080}								loading="eager"									className="object-cover"
 								/>
 							</motion.div>
 							<div className="absolute -z-10 inset-0 bg-gradient-to-r from-primary/20 to-secondary/20 blur-3xl rounded-full" />

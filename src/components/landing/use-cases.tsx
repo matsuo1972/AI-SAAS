@@ -23,6 +23,7 @@ export function UseCases() {
 								src="https://images.unsplash.com/photo-1542744094-3a31f272c490?auto=format&fit=crop&q=80"
 								alt="デザイナー・クリエイター"
 								fill
+								sizes="(max-width: 768px) 100vw, 50vw"
 								className="object-cover"
 							/>
 						</div>
@@ -55,6 +56,7 @@ export function UseCases() {
 								src="https://images.unsplash.com/photo-1552581234-26160f608093?auto=format&fit=crop&q=80"
 								alt="マーケター"
 								fill
+								sizes="(max-width: 768px) 100vw, 50vw"
 								className="object-cover"
 							/>
 						</div>
