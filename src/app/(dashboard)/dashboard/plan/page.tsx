@@ -15,6 +15,8 @@ const initialState: StripeState = {
 };
 
 export default function Plan() {
+	const hasUnavailablePlans = plans.some((plan) => !plan.priceId);
+
 	// サーバーアクションでの返り値でエラーハンドリングする場合の書き方、もしくはリダイレクトさせたい時の書き方
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	const [state, formAction, isPending] = useActionState(
@@ -40,14 +42,20 @@ export default function Plan() {
 					<p className="mt-4 text-muted-foreground text-lg">
 						あなたのニーズに合わせて最適なプランをお選びください。
 					</p>
+					{hasUnavailablePlans && (
+						<p className="mt-3 text-sm text-amber-600">
+							一部プランは Stripe 設定が未完了のため、現在は選択できません。
+						</p>
+					)}
 				</div>
 			</div>
 			<div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mx-auto max-w-7xl">
 				{plans.map((plan) => {
 					const Icon = plan.icon;
+					const isConfigured = Boolean(plan.priceId);
 					return (
 						<div
-							key={plan.priceId}
+							key={plan.name}
 							className={`border rounded-xl bg-card p-8 shadow-sm flex flex-col ${
 								plan.popular
 									? "ring-2 ring-primary scale-105"
@@ -107,10 +115,18 @@ export default function Plan() {
 									variant={
 										plan.popular ? "default" : "outline"
 									}
+									disabled={!isConfigured || isPending}
 									type="submit"
 								>
-									{plan.buttonText}
+									{isConfigured
+										? plan.buttonText
+										: "現在利用できません"}
 								</Button>
+								{!isConfigured && (
+									<p className="mt-3 text-center text-xs text-muted-foreground">
+										管理者による Stripe 料金 ID の設定待ちです。
+									</p>
+								)}
 							</form>
 						</div>
 					);

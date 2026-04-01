@@ -8,6 +8,7 @@ import { cn } from "@/lib/utils";
 import { GenerateImageState } from "@/types/actions";
 import { SignInButton, useUser } from "@clerk/nextjs";
 import { Download, ImageIcon } from "lucide-react";
+import Image from "next/image";
 import { redirect } from "next/navigation";
 import { useActionState } from "react";
 import { toast } from "sonner";
@@ -104,10 +105,13 @@ export default function ImageGenerator() {
 				<div className="space-y-4">
 					<div className="overflow-hidden rounded-lg border bg-background ">
 						<div className="aspect-video relative">
-							<img
+							<Image
 								src={state.imageUrl}
 								alt="Generated Image"
-								className="w-full h-full object-cover"
+								fill
+								unoptimized
+								sizes="(max-width: 768px) 100vw, 768px"
+								className="object-cover"
 							/>
 						</div>
 					</div>

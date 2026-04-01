@@ -1,23 +1,24 @@
-import { STRIPE_PLANS } from "@/config/plans";
+import { getStripePlans } from "@/config/plans";
 import { prisma } from "@/lib/prisma";
 import { SubscriptionStatus } from "@prisma/client";
 import Stripe from "stripe";
 
 function getPlanDetails(subscription: Stripe.Subscription) {
+    const stripePlans = getStripePlans();
     const priceId = subscription.items.data[0].price.id;
     let status: SubscriptionStatus = "FREE";
     let credits = 5;
 
     switch(priceId) {
-        case STRIPE_PLANS.STARTER:
+        case stripePlans.STARTER:
             status = "STARTER";
             credits = 50;
             break;
-        case STRIPE_PLANS.PRO:
+        case stripePlans.PRO:
             status = "PRO";
             credits = 120;
             break;
-        case STRIPE_PLANS.ENTERPRISE:
+        case stripePlans.ENTERPRISE:
             status = "ENTERPRISE";
             credits = 300;
             break;

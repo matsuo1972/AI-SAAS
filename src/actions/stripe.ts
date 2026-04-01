@@ -1,19 +1,32 @@
 "use server";
-import { STRIPE_PLANS } from "@/config/plans";
+import { getStripePlans } from "@/config/plans";
 import { prisma } from "@/lib/prisma";
 import { stripe } from "@/lib/stripe";
 import { StripeState } from "@/types/actions";
 import { currentUser } from "@clerk/nextjs/server";
 
-const ALLOWED_PRICE_IDS = new Set(Object.values(STRIPE_PLANS));
+function getAllowedPriceIds() {
+	return new Set(Object.values(getStripePlans()));
+}
 
 export default async function createStripeSession(
 	prevState: StripeState,
 	formData: FormData,
 ): Promise<StripeState> {
 	const priceId = formData.get("priceId") as string;
+	let allowedPriceIds: Set<string>;
 
-	if (!priceId || !ALLOWED_PRICE_IDS.has(priceId)) {
+	try {
+		allowedPriceIds = getAllowedPriceIds();
+	} catch {
+		return {
+			status: "error",
+			error: "Stripe の料金設定が未構成です。",
+			redirectUrl: "",
+		};
+	}
+
+	if (!priceId || !allowedPriceIds.has(priceId)) {
 		return {
 			status: "error",
 			error: "無効なプランが選択されました。",

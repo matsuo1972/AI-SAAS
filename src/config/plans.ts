@@ -1,17 +1,29 @@
 import { Crown, Rocket, Sparkles } from "lucide-react";
 
+function getEnv(name: string): string {
+	return process.env[name]?.trim() ?? "";
+}
+
 function getRequiredEnv(name: string): string {
-	const value = process.env[name];
+	const value = getEnv(name);
 	if (!value) {
 		throw new Error(`${name} is not configured`);
 	}
 	return value;
 }
 
-export const STRIPE_PLANS = {
-	STARTER: getRequiredEnv("STRIPE_PRICE_STARTER"),
-	PRO: getRequiredEnv("STRIPE_PRICE_PRO"),
-	ENTERPRISE: getRequiredEnv("STRIPE_PRICE_ENTERPRISE"),
+export function getStripePlans() {
+	return {
+		STARTER: getRequiredEnv("STRIPE_PRICE_STARTER"),
+		PRO: getRequiredEnv("STRIPE_PRICE_PRO"),
+		ENTERPRISE: getRequiredEnv("STRIPE_PRICE_ENTERPRISE"),
+	};
+}
+
+const optionalStripePlans = {
+	STARTER: getEnv("STRIPE_PRICE_STARTER"),
+	PRO: getEnv("STRIPE_PRICE_PRO"),
+	ENTERPRISE: getEnv("STRIPE_PRICE_ENTERPRISE"),
 };
 
 export const plans = [
@@ -23,7 +35,7 @@ export const plans = [
 		// features: ['月50クレジット付与', '基本的な画像生成', 'メールサポート'],
 		features: ["月50クレジット付与", "60秒までの音楽生成"],
 		buttonText: "Starterプランを選択",
-		priceId: STRIPE_PLANS.STARTER,
+		priceId: optionalStripePlans.STARTER,
 	},
 	{
 		name: "Pro",
@@ -34,7 +46,7 @@ export const plans = [
 		features: ["月120クレジット付与", "190秒までの音楽生成"],
 		buttonText: "Proプランを選択",
 		popular: true,
-		priceId: STRIPE_PLANS.PRO,
+		priceId: optionalStripePlans.PRO,
 	},
 	{
 		name: "Enterprise",
@@ -50,6 +62,6 @@ export const plans = [
 		// ],
 		features: ["月300クレジット付与", "190秒までの音楽生成"],
 		buttonText: "Enterpriseプランを選択",
-		priceId: STRIPE_PLANS.ENTERPRISE,
+		priceId: optionalStripePlans.ENTERPRISE,
 	},
 ];
